@@ -41,11 +41,8 @@ jobs:
                 compiler: [{cc: clang, cxx: clang++}, {cc: gcc, cxx: g++}]
                 cmake_build_type: [Debug, Release]
         steps:
-            - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4.1.3
-            - uses: lukka/get-cmake@4931ab1fc1604964c055eb330edb3f6b26ba0cfa # v3.29.2
-            - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
-              with:
-                  python-version: '3.7'
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            - uses: lukka/get-cmake@56d043d188c3612951d8755da8f4b709ec951ad6 # v3.31.6
             - name: Install Ubuntu Package Dependencies
               run: |
                   sudo apt-get -qq update
@@ -62,8 +59,7 @@ jobs:
             - name: Test
               run: |
                   cd build
-                  ctest --output-on-failure &&
-                  cd ../Test && ./runtests
+                  ctest --output-on-failure
             - name: Zip
               if: ${{ matrix.compiler.cc == 'clang' }}
               env:
@@ -101,15 +97,12 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [{genus: macos-11, family: osx}]
+                os: [{genus: macos-13, family: osx}]
                 compiler: [{cc: clang, cxx: clang++}]
                 cmake_build_type: [Debug, Release]
         steps:
-            - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4.1.3
-            - uses: lukka/get-cmake@4931ab1fc1604964c055eb330edb3f6b26ba0cfa # v3.29.2
-            - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
-              with:
-                  python-version: '3.7'
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            - uses: lukka/get-cmake@56d043d188c3612951d8755da8f4b709ec951ad6 # v3.31.6
             - run: ./update_glslang_sources.py
             - name: Build
               env:
@@ -122,8 +115,7 @@ jobs:
             - name: Test
               run: |
                   cd build
-                  ctest --output-on-failure &&
-                  cd ../Test && ./runtests
+                  ctest --output-on-failure
             - name: Zip
               env:
                   ARCHIVE: glslang-main-${{matrix.os.family}}-${{matrix.cmake_build_type}}.zip
@@ -162,11 +154,8 @@ jobs:
                 os: [{genus: windows-2019, family: windows}]
                 cmake_build_type: [Debug, Release]
         steps:
-            - uses: actions/checkout@1d96c772d19495a3b5c517cd2bc0cb401ea0529f # v4.1.3
-            - uses: lukka/get-cmake@4931ab1fc1604964c055eb330edb3f6b26ba0cfa # v3.29.2
-            - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
-              with:
-                  python-version: '3.7'
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            - uses: lukka/get-cmake@56d043d188c3612951d8755da8f4b709ec951ad6 # v3.31.6
             - run: python update_glslang_sources.py
             - name: Build
               run: |
@@ -176,7 +165,6 @@ jobs:
               run: |
                   cd build
                   ctest -C ${{matrix.cmake_build_type}} --output-on-failure
-                  cd ../Test && bash runtests
             - name: Zip
               if: ${{ matrix.cmake_build_type == 'Debug' }}
               env:
